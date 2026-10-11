@@ -14,5 +14,14 @@ public interface PositionRepository extends MongoRepository<VehiclePosition, Str
 	Collection<VehiclePosition> findByTimestampAfter(Date since);
 
 	@Aggregation(pipeline = { "{ '$group': { '_id' : '$name' } }" })
-    List<String> findDistinctNames();
+        
+       List<String> findDistinctNames();
+
+        @Aggregation(pipeline = {
+          "{ '$sort': { 'name': 1, 'timestamp': -1 } }",
+          "{ '$group': { '_id': '$name', 'latest': { '$first': '$$ROOT' } } }",
+          "{ '$replaceRoot': { 'newRoot': '$latest' } }"
+})
+       List<VehiclePosition> findLatestPositionsForAllVehicles();
+
 }

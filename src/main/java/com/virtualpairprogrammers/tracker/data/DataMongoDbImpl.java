@@ -52,20 +52,12 @@ public class DataMongoDbImpl implements Data {
 		}
 	}
 
-	@Override
-	public Collection<VehiclePosition> getLatestPositionsOfAllVehicles() {
-		List<String> allNames = mongoDb.findDistinctNames();
-		List<VehiclePosition> results = new ArrayList<>();
-		for (String next: allNames)
-		{
-			try {
-				results.add(getLatestPositionFor(next));
-			} catch (VehicleNotFoundException e) {
-				throw new RuntimeException(e);
-			}
-		}
-		return results; 
-	}
+         
+        @Override
+        public Collection<VehiclePosition> getLatestPositionsOfAllVehicles() {
+           return mongoDb.findLatestPositionsForAllVehicles();
+        }
+
 
 	@Override
 	public Collection<VehiclePosition> getHistoryFor(String vehicleName) throws VehicleNotFoundException {
